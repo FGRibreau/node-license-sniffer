@@ -1,5 +1,11 @@
 # node-license-sniffer
 
+# Fork
+
+- dedup licenses (useful to not have a large license file)
+
+# Original readme
+
 node-license-sniffer is a tool for detecting the license of node packages.
 It will attempt to read the license from `package.json`.
 If it cannot find the license in `package.json`,
@@ -7,12 +13,12 @@ it will read `LICENSE` and similarly named files and attempt to guess the licens
 
 ## Installation
 
-    npm install license-sniffer
+    npm install fg-license-sniffer
 
 ## Usage
 
     node-license-sniffer [package-dir] [--js-comment] [--recurse] [--body] [--no-generate-body]
-    
+
 Arguments:
 
 * `package-dir` -- the directory of the package. Defaults to the current directory.
@@ -26,20 +32,20 @@ Arguments:
 ## Examples
 
 Running node-license-sniffer in its own directory:
-    
+
     $ node-license-sniffer
     BSD
-    
+
 Using `--js-comment` and `--body` (truncated for brevity):
 
     $ node-license-sniffer --js-comment --body
     // BSD
-    // 
+    //
     //     Copyright (c) 2013, Michael Williamson
     //     All rights reserved.
     //     
     //     Redistribution and use in source and binary forms...
-    
+
 Using `package-dir` and `--recurse`:
 
     $ node-license-sniffer node_modules/optimist --recurse

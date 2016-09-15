@@ -3,7 +3,7 @@
 var optimist = require("optimist");
 
 var licenseSniffer = require("../");
-
+var _ = require('lodash');
 
 var argv = optimist.argv;
 var modulePath = argv._[0] || ".";
@@ -24,29 +24,24 @@ if ("generate-body" in argv) {
     options.generateBody = argv["generate-body"];
 }
 
-if (argv.recurse) {
-    licenseSniffer.sniffRecursive(modulePath, options, function(err, licenses) {
-        if (err) {
-            console.error(err);
-        } else {
-            licenses.forEach(function(license) {
-                writeLine("Module: " + license.dependencyChain.join(" => "));
-                writeLine("License: " + license.describeLicense());
-                writeBody(license);
-                writeLine();
-            });
-        }
-    });
-} else {
-    licenseSniffer.sniff(modulePath, options, function(err, license) {
-        if (err) {
-            console.error(err);
-        } else {
-            writeLine(license.describeLicense());
-            writeBody(license);
-        }
-    });
-}
+licenseSniffer.sniffRecursive(modulePath, options, function(err, licenses) {
+    if (err) {
+        console.error(err);
+    } else {
+
+      _.chain(licenses)
+        .groupBy(license => license.text)
+        .forEach((licenses) => {
+          licenses.forEach(license => {
+            writeLine("Module: " + license.dependencyChain.join(" => "));
+          });
+          writeLine("License: " + _.first(licenses).describeLicense());
+          writeBody(_.first(licenses));
+          writeLine();
+        })
+        .value();
+    }
+});
 
 function writeBody(license) {
     if (argv.body && license.text) {
